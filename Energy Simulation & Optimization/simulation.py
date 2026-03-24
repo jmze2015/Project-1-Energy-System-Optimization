@@ -45,8 +45,7 @@ plt.plot(df["demand"], label="Demand")
 plt.plot(df["generation"], label="Generation")
 plt.legend()
 plt.title("Energy Demand vs Generation")
-plt.show()
-
+plt.savefig("Images/demand_vs_generation.png", dpi = 300, bbox_inches="tight")
 
 
 
@@ -90,8 +89,28 @@ plt.plot(df["demand"], label="Demand")
 plt.plot(df["optimized_generation"], label="Optimized Generation")
 plt.legend()
 plt.title("Energy Demand vs Optimized Generation")
-plt.show()
+plt.savefig("Images/demand_vs_optimized_generation.png", dpi = 300, bbox_inches = "tight")
 
 
-print(df)
+## optimized vs fixed generation
+plt.figure(figsize=(10,5))
+plt.plot(df["generation"], label="Generation")
+plt.plot(df["optimized_generation"], label="Optimized Generation")
+plt.legend()
+plt.title("Fixed Generation vs Optimized Generation")
+plt.savefig("Images/fixed_vs_optimized_generation.png", dpi = 300, bbox_inches = "tight")
 
+
+def total_cost(demand, generation, cost=1.0, penalty=10.0):
+    unmet = np.maximum(demand - generation, 0)
+    return np.sum(cost * generation + penalty * unmet)
+
+cost_fixed = total_cost(df["demand"], df["generation"])
+cost_opt = total_cost(df["demand"], df["optimized_generation"])
+
+savings = cost_fixed - cost_opt
+percent_savings = 100 * savings / cost_fixed
+
+print(f"Fixed cost: {cost_fixed:.2f}")
+print(f"Optimized cost: {cost_opt:.2f}")
+print(f"Savings: {savings:.2f} ({percent_savings:.2f}%)")
